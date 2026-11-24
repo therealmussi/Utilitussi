@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@custom-variant light (&:where(.light, .light *));
+
+@theme {
+  --color-app: #070b14;
+  --color-panel: #0d1420;
+  --color-panel-2: #131c2b;
+  --color-panel-3: #1a2536;
+  --color-hair: #1e2a3d;
+  --color-ink: #e6edf6;
+  --color-ink-2: #9fb0c3;
+  --color-ink-3: #5c6e84;
+  --color-good: #3ecfa0;
+  --color-warn: #e5b567;
+  --color-bad: #e5646e;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+:root.light {
+  --color-app: #f4f6fa;
+  --color-panel: #ffffff;
+  --color-panel-2: #eef1f7;
+  --color-panel-3: #e4e9f2;
+  --color-hair: #d9dfe9;
+  --color-ink: #16202e;
+  --color-ink-2: #4c5c70;
+  --color-ink-3: #7b8aa0;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background-color: var(--color-app);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-hair); border-radius: 6px; }
+
+input, textarea, select, button { font-family: inherit; }
+
+.grid-bg {
+  background-image:
+    linear-gradient(var(--color-hair) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-hair) 1px, transparent 1px);
+  background-size: 42px 42px;
+  background-position: center;
+}
+
+.graph-edge { stroke: var(--color-hair); }
+
+@keyframes mm-fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.animate-fade-in { animation: mm-fade-in .18s ease-out both; }
