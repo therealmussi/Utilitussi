@@ -39,6 +39,7 @@ function trackRender(c: string) {
 
 export default function App() {
   const ready = useAppStore((s) => s.ready)
+  const initError = useAppStore((s) => s.initError)
   const preferences = useAppStore((s) => s.preferences)
   const init = useAppStore((s) => s.init)
   const [page, setPage] = useState<Page>(pageFromHash)
@@ -74,6 +75,28 @@ export default function App() {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="animate-pulse text-sm text-ink-3">Opening your universe…</div>
+      </div>
+    )
+  }
+
+  if (initError) {
+    return (
+      <div className="flex h-full items-center justify-center p-8">
+        <div className="max-w-lg rounded-xl border border-warn/40 bg-panel p-6">
+          <h2 className="mb-2 text-sm font-semibold text-warn">The universe could not be opened</h2>
+          <p className="mb-3 text-xs text-ink-2">
+            Local storage (IndexedDB) is unavailable in this browser session. This can happen in private
+            browsing, with storage-blocking extensions, or in embedded browsers. The app cannot start without
+            it, because your knowledge graph is stored locally by design.
+          </p>
+          <p className="mb-4 rounded-md border border-hair bg-panel-2 p-3 font-mono text-xs text-ink-3">{initError}</p>
+          <button
+            className="rounded-md border border-hair px-3 py-1.5 text-xs hover:bg-panel-2"
+            onClick={() => window.location.reload()}
+          >
+            Retry
+          </button>
+        </div>
       </div>
     )
   }

@@ -34,6 +34,7 @@ import {
 
 interface AppState {
   ready: boolean
+  initError: string | null
   universes: Universe[]
   nodes: KnowledgeNode[]
   connections: Connection[]
@@ -89,6 +90,7 @@ function pick<T extends { id: string; universeId?: string }>(items: T[], univers
 
 export const useAppStore = create<AppState>((set, get) => ({
   ready: false,
+  initError: null,
   universes: [],
   nodes: [],
   connections: [],
@@ -100,23 +102,39 @@ export const useAppStore = create<AppState>((set, get) => ({
   preferences: storage.DEFAULT_PREFERENCES,
 
   init: async () => {
-    await storage.bootstrapIfEmpty()
-    const all = await storage.loadAll()
-    const settings = await storage.loadSettings()
-    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(ACTIVE_KEY) : null
-    const active = all.universes.some((u) => u.id === saved) ? saved : (all.universes[0]?.id ?? null)
-    set({
-      ready: true,
-      universes: all.universes,
-      nodes: all.nodes,
-      connections: all.connections,
-      collections: all.collections,
-      sources: all.sources,
-      mindMaps: all.mindMaps,
-      learningPaths: all.learningPaths,
-      preferences: settings.preferences,
-      activeUniverseId: active,
-    })
+    try {
+      await storage.bootstrapIfEmpty()
+      const all = await storage.loadAll()
+      const settings = await storage.loadSettings()
+      const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(ACTIVE_KEY) : null
+      const active = all.universes.some((u) => u.id === saved) ? saved : (all.universes[0]?.id ?? null)
+      set({
+        ready: true,
+        initError: null,
+        universes: all.universes,
+        nodes: all.nodes,
+        connections: all.connections,
+        collections: all.collections,
+        sources: all.sources,
+        mindMaps: all.mindMaps,
+        learningPaths: all.learningPaths,
+        preferences: settings.preferences,
+        activeUniverseId: active,
+      })
+    } catch (err) {
+      set({
+        ready: true,
+        initError: err instanceof Error ? err.message : String(err),
+        universes: [],
+        nodes: [],
+        connections: [],
+        collections: [],
+        sources: [],
+        mindMaps: [],
+        learningPaths: [],
+        activeUniverseId: null,
+      })
+    }
   },
 
   setActiveUniverse: (id) => {
