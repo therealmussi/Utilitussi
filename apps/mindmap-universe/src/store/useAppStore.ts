@@ -1,5 +1,5 @@
+import { useMemo } from 'react'
 import { create } from 'zustand'
-import { useShallow } from 'zustand/react/shallow'
 import type {
   Connection,
   LearningPath,
@@ -380,13 +380,19 @@ export function useActiveUniverse(): Universe | undefined {
 }
 
 export function useUniverseData() {
-  return useAppStore(
-    useShallow((s) => ({
-      nodes: s.nodes.filter((n) => n.universeId === s.activeUniverseId),
-      connections: s.connections.filter((c) => c.universeId === s.activeUniverseId),
-      collections: s.collections.filter((c) => c.universeId === s.activeUniverseId),
-      sources: s.sources.filter((x) => x.universeId === s.activeUniverseId),
-    })),
+  const nodes = useAppStore((s) => s.nodes)
+  const connections = useAppStore((s) => s.connections)
+  const collections = useAppStore((s) => s.collections)
+  const sources = useAppStore((s) => s.sources)
+  const activeUniverseId = useAppStore((s) => s.activeUniverseId)
+  return useMemo(
+    () => ({
+      nodes: activeUniverseId ? nodes.filter((n) => n.universeId === activeUniverseId) : nodes,
+      connections: activeUniverseId ? connections.filter((c) => c.universeId === activeUniverseId) : connections,
+      collections: activeUniverseId ? collections.filter((c) => c.universeId === activeUniverseId) : collections,
+      sources: activeUniverseId ? sources.filter((x) => x.universeId === activeUniverseId) : sources,
+    }),
+    [nodes, connections, collections, sources, activeUniverseId],
   )
 }
 
