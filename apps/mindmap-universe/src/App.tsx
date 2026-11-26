@@ -73,8 +73,8 @@ export default function App() {
 
   if (!ready) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="animate-pulse text-sm text-ink-3">Opening your universe…</div>
+      <div data-mmu-mounted className="flex h-full items-center justify-center">
+        <div className="animate-pulse text-sm text-ink-2">Opening your universe…</div>
       </div>
     )
   }
@@ -107,7 +107,7 @@ export default function App() {
 
   try {
     return (
-      <div key={tick} className="h-full">
+      <div key={tick} data-mmu-mounted className="h-full">
         <Layout page={page} setPage={navigate}>
           <div className="h-full overflow-y-auto">
             {page === 'universe' && <FullFrame><UniverseGraph /></FullFrame>}
